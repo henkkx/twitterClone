@@ -1,28 +1,27 @@
 import React, { useState, useContext } from 'react';
 import { Form, Button } from 'semantic-ui-react';
-
-import gql from 'graphql-tag';
-
-import { AuthContext } from '../context/auth'
+import { AuthContext } from '../context/auth';
 import { useMutation } from '@apollo/react-hooks';
-import { useForm } from '../util/hooks'
+
+import { useForm } from '../util/hooks';
+import { REGISTER_USER } from '../util/graphql';
 import 'semantic-ui-css/semantic.min.css';
 
 const Register = (props) => {
-	const context = useContext(AuthContext)
+	const context = useContext(AuthContext);
 	const [ errors, setErrors ] = useState({});
 
-    const { onChange, onSubmit, values } = useForm(registerUser, {
-        username: '',
+	const { onChange, onSubmit, values } = useForm(registerUser, {
+		username: '',
 		email: '',
 		password: '',
 		confirmPassword: ''
-    })
+	});
 
 	const [ addUser, { loading } ] = useMutation(REGISTER_USER, {
-		update(_, {data: {register: userData}}) {
-			context.login(userData)
-            props.history.push('/')
+		update(_, { data: { register: userData } }) {
+			context.login(userData);
+			props.history.push('/');
 		},
 		onError(err) {
 			setErrors(err.graphQLErrors[0].extensions.exception.errors);
@@ -31,8 +30,8 @@ const Register = (props) => {
 	});
 
 	function registerUser() {
-        addUser()
-    }
+		addUser();
+	}
 
 	return (
 		<div className="form-container" style={{ marginTop: 10 }}>
@@ -45,7 +44,7 @@ const Register = (props) => {
 					value={values.username}
 					onChange={onChange}
 					type="text"
-                    error={errors.username}
+					error={errors.username}
 				/>
 				<Form.Input
 					label="Email"
@@ -54,7 +53,7 @@ const Register = (props) => {
 					value={values.email}
 					onChange={onChange}
 					type="email"
-                    error={errors.email}
+					error={errors.email}
 				/>
 				<Form.Input
 					label="Password"
@@ -63,7 +62,7 @@ const Register = (props) => {
 					value={values.password}
 					onChange={onChange}
 					type="password"
-                    error={errors.password}
+					error={errors.password}
 				/>
 				<Form.Input
 					label="Confirm Password"
@@ -72,7 +71,7 @@ const Register = (props) => {
 					value={values.confirmPassword}
 					onChange={onChange}
 					type="password"
-                    error={errors.confirmPassword}
+					error={errors.confirmPassword}
 				/>
 
 				<Button type="submit" primary>
@@ -88,24 +87,5 @@ const Register = (props) => {
 		</div>
 	);
 };
-
-const REGISTER_USER = gql`
-	mutation register($username: String!, $email: String!, $password: String!, $confirmPassword: String!) {
-		register(
-			registerInput: {
-				username: $username
-				email: $email
-				password: $password
-				confirmPassword: $confirmPassword
-			}
-		) {
-			id
-			email
-			username
-			createdAt
-			token
-		}
-	}
-`;
 
 export default Register;

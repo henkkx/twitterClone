@@ -1,10 +1,12 @@
 import React from 'react';
-import { Form, FormField, FormInput, Button } from 'semantic-ui-react';
+import { Form, FormField, FormInput, Button, TextArea } from 'semantic-ui-react';
 
+import 'semantic-ui-css/semantic.min.css';
 import { useForm } from '../util/hooks';
-import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import {FETCH_POSTS_QUERY} from '../util/graphql'
+
+import { FETCH_POSTS_QUERY } from '../util/graphql';
+import { CREATE_POST_MUTATION } from '../util/graphql';
 
 const PostForm = () => {
 	const { values, onChange, onSubmit } = useForm(createPostCallback, {
@@ -16,10 +18,10 @@ const PostForm = () => {
 		update(proxy, result) {
 			const data = proxy.readQuery({
 				query: FETCH_POSTS_QUERY
-			})
+			});
 
-			data.getPosts = [result.data.createPost, ...data.getPosts]
-			proxy.writeQuery({query: FETCH_POSTS_QUERY, data})
+			data.getPosts = [ result.data.createPost, ...data.getPosts ];
+			proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
 			values.body = '';
 		}
 	});
@@ -29,32 +31,33 @@ const PostForm = () => {
 	}
 
 	return (
-		<Form onSubmit={onSubmit}>
-			<h2>Create a post:</h2>
-			<FormField>
-				<FormInput placeholder="hi world" name="body" onChange={onChange} value={values.body} />
-				<Button type="submit" color="blue">
-					Submit
-				</Button>
-			</FormField>
-		</Form>
+		<div>
+			<Form onSubmit={onSubmit}>
+				<h2>Create a post:</h2>
+				<FormField >
+					<FormInput
+						control={TextArea}
+						rows={1}
+						placeholder="hello world"
+						name="body"
+						onChange={onChange}
+						value={values.body}
+						error={error}
+					/>
+					<Button type="submit" color="blue">
+						Submit
+					</Button>
+				</FormField>
+			</Form>
+			{error && (
+				<div className="ui error message" style={{ marginBottom: 20 }}>
+					<ul className="list">
+						<li>{error.graphQLErrors[0].message} </li>
+					</ul>
+				</div>
+			)}
+		</div>
 	);
 };
-
-const CREATE_POST_MUTATION = gql`
-    mutation createPost($body:String!){
-        createPost(body:$body){
-            id body createdAt username
-            likes{
-                id username createdAt
-            } 
-            likeCount
-            comments {
-                id body username createdAt
-            }
-            commentCount
-        }
-    }
-`;
 
 export default PostForm;

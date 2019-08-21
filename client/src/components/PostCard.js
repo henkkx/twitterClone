@@ -1,14 +1,13 @@
-import React from 'react';
-import { Card, Item, Label, Image, Icon, Button, ButtonGroup } from 'semantic-ui-react';
+import React, { useContext } from 'react';
+import { Card, Label, Image, Icon, Button } from 'semantic-ui-react';
 import moment from 'moment';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+import { AuthContext } from '../context/auth';
+import LikeButton from './LikeButton'
 
 const PostCard = ({ post: { body, createdAt, id, username, likeCount, commentCount, likes } }) => {
-	const handleLikePost = () => {
-		alert('liked');
-	};
-
-	const handleCommentPost = () => {};
+	const { user } = useContext(AuthContext);
 
 	return (
 		<Card fluid>
@@ -22,29 +21,31 @@ const PostCard = ({ post: { body, createdAt, id, username, likeCount, commentCou
 				/>
 				<Card.Header>{username}</Card.Header>
 				<Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
-				<Card.Description as={Link} to={`/posts${id}`}>
-					{body}
+				<Card.Description as={Link} to={`/posts/${id}`}>
+					{body} 
+
 				</Card.Description>
+				
 			</Card.Content>
+		
 			<Card.Content extra>
-				<ButtonGroup >
-					<Button as="div" labelPosition="right">
-						<Button color="blue" basic>
-							<Icon name="heart" />
-						</Button>
-						<Label as="a" basic color="blue" pointing="left">
-							{likeCount}
-						</Label>
-					</Button>
-					<Button as="div" labelPosition="right">
-						<Button color="green" basic>
+
+					<LikeButton post={{id, likes, likeCount}} user = {user} />
+					<Button as={Link} to={`/posts/${id}`} labelPosition="right"  size="mini">
+						<Button color="green" basic size="mini">
 							<Icon name="comments" />
 						</Button>
-						<Label as="a" basic color="green" pointing="left">
+						<Label  basic color="green" pointing="left">
 							{commentCount}
 						</Label>
 					</Button>
-				</ButtonGroup>
+					{user && user.username === username && (
+						<Button floated="right" style={{marginRight:-10}}color="red" size="mini" onClick={() => alert('delete')}>
+							<Icon name="trash" style={{margin:0}}/>
+						</Button>
+					)}
+					
+					
 			</Card.Content>
 		</Card>
 	);
