@@ -13,3 +13,16 @@
 .ui.blue.button:focus, ui.blue.buttons .button:focus{
     background-color: #2185d0
 }
+
+div.description { word-wrap: break-word }
+
+
+.scroll {
+    opacity: 0.7;
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+
+  }

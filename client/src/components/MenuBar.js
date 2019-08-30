@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Sticky } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../context/auth';
+import 'semantic-ui-css/semantic.min.css';
 
 const MenuBar = () => {
 	const { user, logout } = useContext(AuthContext);
@@ -14,36 +15,52 @@ const MenuBar = () => {
 	const handleMenuClick = (e, { name }) => setActiveItem(name);
 
 	const menubar = user ? ( //if logged in
-		<Menu pointing secondary size="massive" color="blue">
-			<Menu.Item name="Home" active={activeItem === 'Home'} onClick={handleMenuClick} as={Link} to="/" />
-			<Menu.Item name="messages" active={activeItem === 'messages'} onClick={handleMenuClick} as={Link} to="/" />
-			<Menu.Menu position="right">
-				<Menu.Item name={user.username} />
-				<Menu.Item name="Logout" onClick={() => logout()} />
-			</Menu.Menu>
-		</Menu>
+		<Sticky>
+			<Menu style={{marginBottom:30}} inverted attached="top" pointing size="massive" secondary color="blue" marginBottom="20">
+				<Menu.Item name="Home" active={activeItem === 'Home'} onClick={handleMenuClick} as={Link} to="/" />
+				<Menu.Item
+					name="messages"
+					active={activeItem === 'messages'}
+					onClick={handleMenuClick}
+					as={Link}
+					to="/"
+				/>
+				<Menu.Menu position="right">
+					<Menu.Item name={user.username} />
+					<Menu.Item name="Logout" onClick={() => logout()} />
+				</Menu.Menu>
+			</Menu>
+		</Sticky>
 	) : (
 		//if not logged in
-		<Menu pointing secondary size="massive" color="blue">
-			<Menu.Item name="Home" active={activeItem === 'Home'} onClick={handleMenuClick} as={Link} to="/" />
-			<Menu.Item name="messages" active={activeItem === 'messages'} onClick={handleMenuClick} as={Link} to="/" />
-			<Menu.Menu position="right">
+		<Sticky>
+			<Menu attached="top" pointing size="massive" inverted secondary color="blue">
+				<Menu.Item name="Home" active={activeItem === 'Home'} onClick={handleMenuClick} as={Link} to="/" />
 				<Menu.Item
-					name="Login"
-					active={activeItem === 'Login'}
+					name="messages"
+					active={activeItem === 'messages'}
 					onClick={handleMenuClick}
 					as={Link}
-					to="/Login"
+					to="/"
 				/>
-				<Menu.Item
-					name="Register"
-					active={activeItem === 'Register'}
-					onClick={handleMenuClick}
-					as={Link}
-					to="/Register"
-				/>
-			</Menu.Menu>
-		</Menu>
+				<Menu.Menu position="right">
+					<Menu.Item
+						name="Login"
+						active={activeItem === 'Login'}
+						onClick={handleMenuClick}
+						as={Link}
+						to="/Login"
+					/>
+					<Menu.Item
+						name="Register"
+						active={activeItem === 'Register'}
+						onClick={handleMenuClick}
+						as={Link}
+						to="/Register"
+					/>
+				</Menu.Menu>
+			</Menu>
+		</Sticky>
 	);
 
 	return menubar;

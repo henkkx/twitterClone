@@ -43,6 +43,7 @@ const PostForm = () => {
 						onChange={onChange}
 						value={values.body}
 						error={error}
+						maxLength="140"
 					/>
 					<Button type="submit" color="blue">
 						Submit

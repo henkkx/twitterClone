@@ -19,61 +19,55 @@ import PostLoader from '../components/PostLoader';
 import { AuthContext } from '../context/auth';
 import LikeButton from '../components/LikeButton';
 import DeleteButton from '../components/DeleteButton';
+import CommentButton from '../components/CommentButton'
 
 const SinglePost = (props) => {
 	const postId = props.match.params.postId;
-	console.log(FETCH_POST_QUERY);
 	const { user } = useContext(AuthContext);
-
-
 
 	const { data: { getPost } } = useQuery(FETCH_POST_QUERY, {
 		variables: {
 			postId
 		}
-    });
-    
-    const deletePostCallback = ()=> {
-        props.history.push("/")
-    }
+	});
 
+	const deletePostCallback = () => {
+		props.history.push('/');
+	};
 
-	let postMarkup;
-	if (!getPost) postMarkup = PostLoader;
-	else {
-		const { id, body, username, createdAt, comments, likes, likeCount, commentCount } = getPost;
+	if (!getPost) return <PostLoader />;
 
-		postMarkup = (
-			<Grid>
-				<GridRow>
-					<GridColumn width={2}>
-						<Image
-							as={Link}
-							to={'/'}
-							floated="right"
-							size="small"
-							src="https://react.semantic-ui.com/images/avatar/large/molly.png"
-						/>
-					</GridColumn>
-					<Card fluid>
-						<CardContent>
-							<CardHeader>{username}</CardHeader>
-							<CardMeta>{moment(createdAt).fromNow()} </CardMeta>
-							<CardDescription>{body}</CardDescription>
-						</CardContent>
-						<hr />
-						<CardContent extra>
-							<LikeButton user={user} post={{ id, likeCount, likes }} />
+	const { id, body, username, createdAt, comments, likes, likeCount, commentCount } = getPost;
 
-							{user && user.username === username && <DeleteButton postId={id} callback={deletePostCallback} />}
-						</CardContent>
-					</Card>
-				</GridRow>
-			</Grid>
-		);
-	}
-
-	return postMarkup;
+	return (
+		<Grid style={{marginTop:20}}>
+			<GridRow>
+				<GridColumn width={2}>
+					<Image
+						as={Link}
+						to={'/'}
+						floated="right"
+						size="small"
+						src="https://react.semantic-ui.com/images/avatar/large/molly.png"
+					/>
+				</GridColumn>
+				<Card fluid>
+					<CardContent>
+						<CardHeader>{username}</CardHeader>
+						<CardMeta>{moment(createdAt).fromNow()} </CardMeta>
+						<CardDescription>{body}</CardDescription>
+					</CardContent>
+					<hr />
+					<CardContent extra>
+						<LikeButton user={user} post={{ id, likeCount, likes }} />
+						<CommentButton commentCount={commentCount}/>
+						{user &&
+						user.username === username && <DeleteButton postId={id} callback={deletePostCallback} />}
+					</CardContent>
+				</Card>
+			</GridRow>
+		</Grid>
+	);
 };
 
 export default SinglePost;
