@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 
 class ScrollButton extends React.Component {
