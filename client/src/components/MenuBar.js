@@ -26,7 +26,7 @@ const MenuBar = () => {
 					to="/"
 				/>
 				<Menu.Menu position="right">
-					<Menu.Item name={user.username} />
+					<Menu.Item name={user.username} as={Link} to="/profile" />
 					<Menu.Item name="Logout" onClick={() => logout()} />
 				</Menu.Menu>
 			</Menu>

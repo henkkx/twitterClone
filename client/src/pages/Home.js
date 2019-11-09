@@ -28,7 +28,7 @@ const Home = () => {
 				{loading ? (
 					<PostLoader />
 				) : (
-					<TransitionGroup animation="fly down" >
+					<TransitionGroup animation="fly down">
 						{posts &&
 							posts.map((post) => (
 								<Grid.Column key={post.id} style={{ marginBottom: 30 }}>
